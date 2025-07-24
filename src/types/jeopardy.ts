@@ -4,6 +4,8 @@ export interface JeopardyQuestion {
   answer: string;
   value: number;
   isAnswered?: boolean;
+  questionImage?: string;
+  answerImage?: string;
 }
 
 export interface JeopardyCategory {

@@ -3,12 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { JeopardyGame, JeopardyCategory, JeopardyQuestion } from '@/types/jeopardy';
 import { Plus, Trash2, Save, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { InlineMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+import { MathEditor } from '@/components/MathEditor';
+import { ImageUpload } from '@/components/ImageUpload';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface GameEditorProps {
   game: JeopardyGame | null;
@@ -29,6 +29,8 @@ export const GameEditor = ({ game, onSave, onBack }: GameEditorProps) => {
           question: '',
           answer: '',
           value: (i + 1) * 100,
+          questionImage: '',
+          answerImage: '',
         })),
       },
     ]
@@ -43,6 +45,8 @@ export const GameEditor = ({ game, onSave, onBack }: GameEditorProps) => {
         question: '',
         answer: '',
         value: (i + 1) * 100,
+        questionImage: '',
+        answerImage: '',
       })),
     };
     setCategories([...categories, newCategory]);
@@ -107,22 +111,6 @@ export const GameEditor = ({ game, onSave, onBack }: GameEditorProps) => {
     });
   };
 
-  const renderMathPreview = (text: string) => {
-    if (text.includes('$') && text.includes('$')) {
-      try {
-        const mathRegex = /\$([^$]+)\$/g;
-        return text.split(mathRegex).map((part, index) => {
-          if (index % 2 === 1) {
-            return <InlineMath key={index} math={part} />;
-          }
-          return part;
-        });
-      } catch (error) {
-        return text;
-      }
-    }
-    return text;
-  };
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -198,37 +186,50 @@ export const GameEditor = ({ game, onSave, onBack }: GameEditorProps) => {
                         <span className="font-semibold text-primary">${question.value}</span>
                       </div>
                       
-                      <div>
-                        <Label className="text-sm">Question (Use $...$ for math)</Label>
-                        <Textarea
-                          value={question.question}
-                          onChange={(e) => updateQuestion(category.id, question.id, 'question', e.target.value)}
-                          placeholder="Enter question..."
-                          className="text-sm"
-                          rows={2}
-                        />
-                        {question.question && (
-                          <div className="text-xs text-muted-foreground mt-1 p-2 bg-background rounded border">
-                            Preview: {renderMathPreview(question.question)}
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <Label className="text-sm">Answer (Use $...$ for math)</Label>
-                        <Textarea
-                          value={question.answer}
-                          onChange={(e) => updateQuestion(category.id, question.id, 'answer', e.target.value)}
-                          placeholder="Enter answer..."
-                          className="text-sm"
-                          rows={2}
-                        />
-                        {question.answer && (
-                          <div className="text-xs text-muted-foreground mt-1 p-2 bg-background rounded border">
-                            Preview: {renderMathPreview(question.answer)}
-                          </div>
-                        )}
-                      </div>
+                       <Tabs defaultValue="question" className="w-full">
+                         <TabsList className="grid w-full grid-cols-2">
+                           <TabsTrigger value="question">Question</TabsTrigger>
+                           <TabsTrigger value="answer">Answer</TabsTrigger>
+                         </TabsList>
+                         
+                         <TabsContent value="question" className="space-y-3">
+                           <div>
+                             <Label className="text-sm">Question Text</Label>
+                             <MathEditor
+                               value={question.question}
+                               onChange={(value) => updateQuestion(category.id, question.id, 'question', value)}
+                               placeholder="Enter question..."
+                               rows={2}
+                             />
+                           </div>
+                           <div>
+                             <Label className="text-sm">Question Image (Optional)</Label>
+                             <ImageUpload
+                               value={(question as any).questionImage}
+                               onChange={(imageUrl) => updateQuestion(category.id, question.id, 'questionImage' as any, imageUrl || '')}
+                             />
+                           </div>
+                         </TabsContent>
+                         
+                         <TabsContent value="answer" className="space-y-3">
+                           <div>
+                             <Label className="text-sm">Answer Text</Label>
+                             <MathEditor
+                               value={question.answer}
+                               onChange={(value) => updateQuestion(category.id, question.id, 'answer', value)}
+                               placeholder="Enter answer..."
+                               rows={2}
+                             />
+                           </div>
+                           <div>
+                             <Label className="text-sm">Answer Image (Optional)</Label>
+                             <ImageUpload
+                               value={(question as any).answerImage}
+                               onChange={(imageUrl) => updateQuestion(category.id, question.id, 'answerImage' as any, imageUrl || '')}
+                             />
+                           </div>
+                         </TabsContent>
+                       </Tabs>
                     </div>
                   ))}
                 </div>
@@ -250,7 +251,10 @@ export const GameEditor = ({ game, onSave, onBack }: GameEditorProps) => {
         </div>
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>💡 Tip: Use $x^2 + y^2 = z^2$ for inline math or $$\int_0^1 x^2 dx$$ for block math</p>
+          <p>💡 Enhanced Math Tips:</p>
+          <p>• Use parentheses for grouping: \int_(3x)^(5x^2+3) </p>
+          <p>• Division auto-converts to fractions: a/b becomes a fraction</p>
+          <p>• Use Enter for line breaks • Upload images for visual questions</p>
         </div>
       </div>
     </div>

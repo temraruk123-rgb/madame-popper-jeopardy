@@ -12,31 +12,62 @@ interface QuestionModalProps {
   onAnswered: () => void;
 }
 
+const preprocessMath = (text: string): string => {
+  // Convert / to fractions, but be smart about it
+  let processed = text.replace(/([^\\]|^)\/([^\/])/g, (match, before, after) => {
+    // Don't convert if it's already in a LaTeX command
+    if (before.match(/\\[a-zA-Z]+$/)) return match;
+    return `${before}\\frac{}{${after}}`;
+  });
+  
+  // Handle parentheses for better grouping
+  processed = processed.replace(/\\_\(([^)]+)\)/g, '_{$1}');
+  processed = processed.replace(/\\?\^\(([^)]+)\)/g, '^{$1}');
+  
+  return processed;
+};
+
 const renderMathContent = (text: string) => {
-  // Check for block math ($$...$$)
-  const blockMathRegex = /\$\$(.*?)\$\$/g;
-  // Check for inline math ($...$)
-  const inlineMathRegex = /\$([^$]+)\$/g;
+  if (!text.trim()) return text;
   
-  if (blockMathRegex.test(text)) {
-    return text.split(blockMathRegex).map((part, index) => {
-      if (index % 2 === 1) {
-        return <BlockMath key={index} math={part} />;
-      }
-      return part;
-    });
+  try {
+    // Handle line breaks
+    const lines = text.split('\n');
+    
+    return lines.map((line, lineIndex) => (
+      <div key={lineIndex}>
+        {(() => {
+          const processedLine = preprocessMath(line);
+          
+          // Check for block math ($$...$$)
+          const blockMathRegex = /\$\$(.*?)\$\$/g;
+          if (blockMathRegex.test(processedLine)) {
+            return processedLine.split(blockMathRegex).map((part, index) => {
+              if (index % 2 === 1) {
+                return <BlockMath key={index} math={part} />;
+              }
+              return part;
+            });
+          }
+          
+          // Check for inline math ($...$)
+          const inlineMathRegex = /\$([^$]+)\$/g;
+          if (inlineMathRegex.test(processedLine)) {
+            return processedLine.split(inlineMathRegex).map((part, index) => {
+              if (index % 2 === 1) {
+                return <InlineMath key={index} math={part} />;
+              }
+              return part;
+            });
+          }
+          
+          return processedLine;
+        })()}
+      </div>
+    ));
+  } catch (error) {
+    return text;
   }
-  
-  if (inlineMathRegex.test(text)) {
-    return text.split(inlineMathRegex).map((part, index) => {
-      if (index % 2 === 1) {
-        return <InlineMath key={index} math={part} />;
-      }
-      return part;
-    });
-  }
-  
-  return text;
 };
 
 export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: QuestionModalProps) => {
@@ -70,6 +101,15 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
             <div className="text-2xl md:text-3xl font-bold text-primary-foreground leading-relaxed">
               {renderMathContent(question.question)}
             </div>
+            {(question as any).questionImage && (
+              <div className="mt-4">
+                <img 
+                  src={(question as any).questionImage} 
+                  alt="Question" 
+                  className="max-w-full h-auto max-h-64 mx-auto rounded border"
+                />
+              </div>
+            )}
           </div>
 
           {/* Answer (if shown) */}
@@ -79,6 +119,15 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
               <div className="text-2xl md:text-3xl font-bold text-secondary-foreground leading-relaxed">
                 {renderMathContent(question.answer)}
               </div>
+              {(question as any).answerImage && (
+                <div className="mt-4">
+                  <img 
+                    src={(question as any).answerImage} 
+                    alt="Answer" 
+                    className="max-w-full h-auto max-h-64 mx-auto rounded border"
+                  />
+                </div>
+              )}
             </div>
           )}
 
