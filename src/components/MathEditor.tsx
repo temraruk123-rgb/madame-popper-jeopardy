@@ -153,7 +153,6 @@ export const MathEditor = ({ value, onChange, placeholder, rows = 3 }: MathEdito
                 size="sm"
                 onClick={() => insertSymbol(item.symbol)}
                 className="h-8 text-xs font-mono hover:bg-primary/10"
-                title={item.label}
               >
                 {item.display}
               </Button>
