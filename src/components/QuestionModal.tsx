@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { JeopardyQuestion } from '@/types/jeopardy';
 import { useState } from 'react';
@@ -93,6 +93,9 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
           <DialogTitle className="text-2xl font-bold text-center text-primary">
             ${question.value}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Jeopardy question for ${question.value}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
