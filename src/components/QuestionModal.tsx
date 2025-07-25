@@ -6,6 +6,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import confetti from 'canvas-confetti';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface QuestionModalProps {
   question: JeopardyQuestion | null;
@@ -76,19 +77,23 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
   const [showAnswer, setShowAnswer] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
-  const encouragingMessages = [
-    "🎉 Fantastic! You're a Jeopardy champion!",
-    "🌟 Brilliant work! Keep it up!",
-    "🎊 Amazing! You're on fire!",
-    "✨ Excellent! Your brain is working overtime!",
-    "🚀 Superb! You're reaching for the stars!",
-    "🏆 Outstanding! Victory is yours!",
-    "💫 Spectacular! You're absolutely crushing it!",
-    "🎯 Perfect! Right on target!",
-    "⭐ Wonderful! You're a star student!",
-    "🎈 Marvelous! Learning is so much fun!"
-  ];
+  const getEncouragingMessage = () => {
+    const messages = [
+      'celebration.fantastic',
+      'celebration.brilliant', 
+      'celebration.amazing',
+      'celebration.excellent',
+      'celebration.superb',
+      'celebration.outstanding',
+      'celebration.spectacular',
+      'celebration.perfect',
+      'celebration.wonderful',
+      'celebration.marvelous'
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  };
 
   const triggerCelebration = () => {
     setCelebrating(true);
@@ -123,10 +128,10 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
     }, 400);
 
     // Show encouraging toast message
-    const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+    const randomMessage = getEncouragingMessage();
     toast({
-      title: randomMessage,
-      description: "Keep up the great work! 🎓",
+      title: t(randomMessage),
+      description: t('celebration.keepItUp'),
       duration: 3000,
     });
 
@@ -214,7 +219,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
             <div className="text-center animate-bounce">
               <div className="text-6xl mb-2">🎉</div>
               <div className="text-2xl font-bold text-primary animate-pulse">
-                Fantastic Work!
+                {t('celebration.fantastic').replace('🎉 ', '')}
               </div>
             </div>
           )}
@@ -227,7 +232,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
                 size="lg"
                 className="px-8 py-3 text-lg bg-secondary hover:bg-secondary/90 hover:scale-105 transition-transform"
               >
-                🤔 Show Answer
+                🤔 {t('button.showAnswer')}
               </Button>
             ) : (
               <div className="space-x-4">
@@ -237,7 +242,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
                   className="px-8 py-3 text-lg bg-primary hover:bg-primary/90 hover:scale-105 transition-transform"
                   disabled={celebrating}
                 >
-                  {celebrating ? "🎉 Celebrating!" : "✅ Mark as Answered"}
+                  {celebrating ? `🎉 ${t('button.celebrating')}` : `✅ ${t('button.markAnswered')}`}
                 </Button>
                 <Button
                   onClick={handleClose}
@@ -246,7 +251,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
                   className="px-8 py-3 text-lg hover:scale-105 transition-transform"
                   disabled={celebrating}
                 >
-                  Close
+                  {t('button.close')}
                 </Button>
               </div>
             )}

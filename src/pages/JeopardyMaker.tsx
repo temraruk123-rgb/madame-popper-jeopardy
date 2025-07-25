@@ -6,11 +6,14 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { JeopardyBoard } from '@/components/JeopardyBoard';
 import { QuestionModal } from '@/components/QuestionModal';
 import { GameEditor } from '@/components/GameEditor';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Plus, Play, Edit, Trash2, Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const JeopardyMaker = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [games, setGames] = useLocalStorage<JeopardyGame[]>('jeopardy-games', []);
   const [currentView, setCurrentView] = useState<'home' | 'editor' | 'play'>('home');
   const [currentGame, setCurrentGame] = useState<JeopardyGame | null>(null);
@@ -39,8 +42,8 @@ export const JeopardyMaker = () => {
   const deleteGame = (gameId: string) => {
     setGames(games.filter(g => g.id !== gameId));
     toast({
-      title: "Game Deleted",
-      description: "The game has been removed successfully.",
+      title: t('games.deleteSuccess'),
+      description: t('games.deleteDesc'),
     });
   };
 
@@ -87,7 +90,7 @@ export const JeopardyMaker = () => {
               variant="outline"
               className="bg-background/90 hover:bg-background"
             >
-              ← Back to Home
+              ← {t('button.back')}
             </Button>
             <div className="text-center">
               <h1 className="text-3xl font-bold text-primary-foreground">
@@ -96,11 +99,11 @@ export const JeopardyMaker = () => {
               <div className="flex items-center gap-2 mt-2 justify-center">
                 <Trophy className="h-5 w-5 text-secondary" />
                 <span className="text-xl font-semibold text-secondary">
-                  Score: ${gameState.currentScore}
+                  {t('play.score')}: ${gameState.currentScore}
                 </span>
               </div>
             </div>
-            <div className="w-32"></div> {/* Spacer for centering */}
+            <LanguageToggle />
           </div>
         </div>
 
@@ -126,13 +129,19 @@ export const JeopardyMaker = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-jeopardy p-8 shadow-jeopardy">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-primary-foreground mb-4">
-            Mme Popper Jeopardy Maker
-          </h1>
-          <p className="text-xl text-primary-foreground/90">
-            Create and play custom Jeopardy games with math formula support!
-          </p>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-start mb-4">
+            <div></div>
+            <LanguageToggle />
+          </div>
+          <div className="text-center">
+            <h1 className="text-5xl font-bold text-primary-foreground mb-4">
+              {t('app.title')}
+            </h1>
+            <p className="text-xl text-primary-foreground/90">
+              {t('app.subtitle')}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -146,22 +155,22 @@ export const JeopardyMaker = () => {
             className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-4 text-lg shadow-gold"
           >
             <Plus className="h-6 w-6 mr-3" />
-            Create New Game
+            {t('button.createNew')}
           </Button>
         </div>
 
         {/* Games List */}
         <div>
-          <h2 className="text-3xl font-bold mb-8 text-center text-foreground">Your Games</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-foreground">{t('games.title')}</h2>
           
           {games.length === 0 ? (
             <Card className="text-center py-12">
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-6xl">🎯</div>
-                  <h3 className="text-2xl font-semibold">No games yet!</h3>
+                  <h3 className="text-2xl font-semibold">{t('games.noGames')}</h3>
                   <p className="text-muted-foreground">
-                    Create your first Jeopardy game to get started.
+                    {t('games.noGamesDesc')}
                   </p>
                 </div>
               </CardContent>
@@ -173,7 +182,7 @@ export const JeopardyMaker = () => {
                   <CardHeader>
                     <CardTitle className="text-xl">{game.title}</CardTitle>
                     <CardDescription>
-                      {game.categories.length} categories • Created {new Date(game.createdAt).toLocaleDateString()}
+                      {game.categories.length} {t('games.categories')} • {t('games.created')} {new Date(game.createdAt).toLocaleDateString()}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -183,7 +192,7 @@ export const JeopardyMaker = () => {
                         className="flex-1 bg-primary hover:bg-primary/90"
                       >
                         <Play className="h-4 w-4 mr-2" />
-                        Play
+                        {t('button.play')}
                       </Button>
                       <Button
                         onClick={() => editGame(game)}
