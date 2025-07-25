@@ -1,9 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { JeopardyQuestion } from '@/types/jeopardy';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import confetti from 'canvas-confetti';
+import { useToast } from '@/hooks/use-toast';
 
 interface QuestionModalProps {
   question: JeopardyQuestion | null;
@@ -72,16 +74,89 @@ const renderMathContent = (text: string) => {
 
 export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: QuestionModalProps) => {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const { toast } = useToast();
+
+  const encouragingMessages = [
+    "🎉 Fantastic! You're a Jeopardy champion!",
+    "🌟 Brilliant work! Keep it up!",
+    "🎊 Amazing! You're on fire!",
+    "✨ Excellent! Your brain is working overtime!",
+    "🚀 Superb! You're reaching for the stars!",
+    "🏆 Outstanding! Victory is yours!",
+    "💫 Spectacular! You're absolutely crushing it!",
+    "🎯 Perfect! Right on target!",
+    "⭐ Wonderful! You're a star student!",
+    "🎈 Marvelous! Learning is so much fun!"
+  ];
+
+  const triggerCelebration = () => {
+    setCelebrating(true);
+    
+    // Confetti burst!
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#FFD700', '#FFA500', '#FF6347', '#32CD32', '#1E90FF', '#FF69B4']
+    });
+
+    // Second confetti burst with different timing
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#FFD700', '#FFA500', '#FF6347']
+      });
+    }, 250);
+
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#32CD32', '#1E90FF', '#FF69B4']
+      });
+    }, 400);
+
+    // Show encouraging toast message
+    const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+    toast({
+      title: randomMessage,
+      description: "Keep up the great work! 🎓",
+      duration: 3000,
+    });
+
+    setTimeout(() => setCelebrating(false), 2000);
+  };
 
   const handleClose = () => {
     setShowAnswer(false);
+    setCelebrating(false);
     onClose();
   };
 
   const handleAnswered = () => {
-    onAnswered();
-    setShowAnswer(false);
-    onClose();
+    triggerCelebration();
+    setTimeout(() => {
+      onAnswered();
+      setShowAnswer(false);
+      onClose();
+    }, 1500); // Delay closing to enjoy the celebration
+  };
+
+  const handleShowAnswer = () => {
+    setShowAnswer(true);
+    // Mini celebration for revealing answer
+    confetti({
+      particleCount: 30,
+      spread: 40,
+      origin: { y: 0.7 },
+      colors: ['#FFD700', '#FFA500']
+    });
   };
 
   if (!question) return null;
@@ -134,30 +209,42 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
             </div>
           )}
 
+          {/* Celebration Animation */}
+          {celebrating && (
+            <div className="text-center animate-bounce">
+              <div className="text-6xl mb-2">🎉</div>
+              <div className="text-2xl font-bold text-primary animate-pulse">
+                Fantastic Work!
+              </div>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex justify-center gap-4">
             {!showAnswer ? (
               <Button
-                onClick={() => setShowAnswer(true)}
+                onClick={handleShowAnswer}
                 size="lg"
-                className="px-8 py-3 text-lg bg-secondary hover:bg-secondary/90"
+                className="px-8 py-3 text-lg bg-secondary hover:bg-secondary/90 hover:scale-105 transition-transform"
               >
-                Show Answer
+                🤔 Show Answer
               </Button>
             ) : (
               <div className="space-x-4">
                 <Button
                   onClick={handleAnswered}
                   size="lg"
-                  className="px-8 py-3 text-lg bg-primary hover:bg-primary/90"
+                  className="px-8 py-3 text-lg bg-primary hover:bg-primary/90 hover:scale-105 transition-transform"
+                  disabled={celebrating}
                 >
-                  Mark as Answered
+                  {celebrating ? "🎉 Celebrating!" : "✅ Mark as Answered"}
                 </Button>
                 <Button
                   onClick={handleClose}
                   variant="outline"
                   size="lg"
-                  className="px-8 py-3 text-lg"
+                  className="px-8 py-3 text-lg hover:scale-105 transition-transform"
+                  disabled={celebrating}
                 >
                   Close
                 </Button>
