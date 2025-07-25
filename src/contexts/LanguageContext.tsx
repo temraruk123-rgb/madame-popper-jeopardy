@@ -90,6 +90,21 @@ const translations = {
     'math.phi': 'Phi',
     'math.omega': 'Omega',
     
+    // Math Tutorial
+    'tutorial.mathTitle': 'Math Symbols Tutorial',
+    'tutorial.mathSubtitle': 'Learn how to create mathematical expressions using LaTeX syntax',
+    'tutorial.openTutorial': 'Math Tutorial',
+    'tutorial.howToUse': 'How to use',
+    'tutorial.typeThis': 'Type this:',
+    'tutorial.getThis': 'To get this:',
+    'tutorial.basicSymbols': 'Basic Symbols',
+    'tutorial.greekLetters': 'Greek Letters', 
+    'tutorial.functions': 'Functions',
+    'tutorial.operators': 'Operators',
+    'tutorial.advanced': 'Advanced',
+    'tutorial.copySymbol': 'Click to copy',
+    'tutorial.copied': 'Copied to clipboard!',
+    
     // Celebration Messages
     'celebration.fantastic': '🎉 Fantastic! You\'re a Jeopardy champion!',
     'celebration.brilliant': '🌟 Brilliant work! Keep it up!',
@@ -180,6 +195,21 @@ const translations = {
     'math.sigma': 'Sigma',
     'math.phi': 'Phi',
     'math.omega': 'Oméga',
+    
+    // Math Tutorial
+    'tutorial.mathTitle': 'Tutoriel des symboles mathématiques',
+    'tutorial.mathSubtitle': 'Apprenez à créer des expressions mathématiques avec la syntaxe LaTeX',
+    'tutorial.openTutorial': 'Tutoriel math',
+    'tutorial.howToUse': 'Comment utiliser',
+    'tutorial.typeThis': 'Tapez ceci :',
+    'tutorial.getThis': 'Pour obtenir ceci :',
+    'tutorial.basicSymbols': 'Symboles de base',
+    'tutorial.greekLetters': 'Lettres grecques',
+    'tutorial.functions': 'Fonctions',
+    'tutorial.operators': 'Opérateurs',
+    'tutorial.advanced': 'Avancé',
+    'tutorial.copySymbol': 'Cliquez pour copier',
+    'tutorial.copied': 'Copié dans le presse-papiers !',
     
     // Celebration Messages
     'celebration.fantastic': '🎉 Fantastique ! Vous êtes un champion de Jeopardy !',

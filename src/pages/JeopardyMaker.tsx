@@ -7,8 +7,9 @@ import { JeopardyBoard } from '@/components/JeopardyBoard';
 import { QuestionModal } from '@/components/QuestionModal';
 import { GameEditor } from '@/components/GameEditor';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { MathTutorial } from '@/components/MathTutorial';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Plus, Play, Edit, Trash2, Trophy } from 'lucide-react';
+import { Plus, Play, Edit, Trash2, Trophy, Calculator } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const JeopardyMaker = () => {
@@ -16,6 +17,7 @@ export const JeopardyMaker = () => {
   const { t } = useLanguage();
   const [games, setGames] = useLocalStorage<JeopardyGame[]>('jeopardy-games', []);
   const [currentView, setCurrentView] = useState<'home' | 'editor' | 'play'>('home');
+  const [showMathTutorial, setShowMathTutorial] = useState(false);
   const [currentGame, setCurrentGame] = useState<JeopardyGame | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [gameState, setGameState] = useLocalStorage<GameState>('current-game-state', {
@@ -149,14 +151,26 @@ export const JeopardyMaker = () => {
       <div className="max-w-6xl mx-auto p-8">
         {/* Create New Game Button */}
         <div className="text-center mb-12">
-          <Button
-            onClick={createNewGame}
-            size="lg"
-            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-4 text-lg shadow-gold"
-          >
-            <Plus className="h-6 w-6 mr-3" />
-            {t('button.createNew')}
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              onClick={createNewGame}
+              size="lg"
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-4 text-lg shadow-gold"
+            >
+              <Plus className="h-6 w-6 mr-3" />
+              {t('button.createNew')}
+            </Button>
+            
+            <Button
+              onClick={() => setShowMathTutorial(true)}
+              variant="outline"
+              size="lg"
+              className="px-8 py-4 text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              <Calculator className="h-6 w-6 mr-3" />
+              {t('tutorial.openTutorial')}
+            </Button>
+          </div>
         </div>
 
         {/* Games List */}
@@ -215,7 +229,13 @@ export const JeopardyMaker = () => {
             </div>
           )}
         </div>
+        </div>
+        
+        {/* Math Tutorial Modal */}
+        <MathTutorial
+          isOpen={showMathTutorial}
+          onClose={() => setShowMathTutorial(false)}
+        />
       </div>
-    </div>
-  );
-};
+    );
+  };
