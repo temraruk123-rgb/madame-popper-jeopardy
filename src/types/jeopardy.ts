@@ -22,7 +22,16 @@ export interface JeopardyGame {
   lastModified: Date;
 }
 
+export interface Team {
+  id: string;
+  name: string;
+  color: string;
+  score: number;
+}
+
 export interface GameState {
   currentScore: number;
   answeredQuestions: string[];
+  teams: Team[];
+  selectedTeamId?: string;
 }

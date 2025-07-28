@@ -193,11 +193,11 @@ export const MathTutorial = ({ isOpen, onClose }: MathTutorialProps) => {
         <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
           <h3 className="text-lg font-semibold mb-3">{t('tutorial.howToUse')}</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p>• Click any symbol card to copy its LaTeX code to your clipboard</p>
-            <p>• Paste the code into your question or answer text</p>
-            <p>• Use $ symbols around math expressions: $\\frac{1}{2}$ for inline math</p>
-            <p>• Use $$ symbols for block math: $$\\int_0^1 x^2 dx$$</p>
-            <p>• Replace {} placeholders with your own values</p>
+            <p>• {t('tutorial.clickToCopy')}</p>
+            <p>• {t('tutorial.pasteCode')}</p>
+            <p>• {t('tutorial.useDollar')}</p>
+            <p>• {t('tutorial.useDoubleDollar')}</p>
+            <p>• {t('tutorial.replacePlaceholders')}</p>
           </div>
         </div>
 

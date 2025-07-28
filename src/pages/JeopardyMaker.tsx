@@ -1,28 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { JeopardyGame, GameState } from '@/types/jeopardy';
+import { JeopardyGame, GameState, Team } from '@/types/jeopardy';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { JeopardyBoard } from '@/components/JeopardyBoard';
 import { QuestionModal } from '@/components/QuestionModal';
 import { GameEditor } from '@/components/GameEditor';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { MathTutorial } from '@/components/MathTutorial';
+import { TeamSetup } from '@/components/TeamSetup';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Plus, Play, Edit, Trash2, Trophy, Calculator } from 'lucide-react';
+import { Plus, Play, Edit, Trash2, Trophy, Calculator, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const JeopardyMaker = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const [games, setGames] = useLocalStorage<JeopardyGame[]>('jeopardy-games', []);
-  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'play'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'play' | 'teamSetup'>('home');
   const [showMathTutorial, setShowMathTutorial] = useState(false);
+  const [showTeamSetup, setShowTeamSetup] = useState(false);
   const [currentGame, setCurrentGame] = useState<JeopardyGame | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [gameState, setGameState] = useLocalStorage<GameState>('current-game-state', {
     currentScore: 0,
-    answeredQuestions: []
+    answeredQuestions: [],
+    teams: []
   });
 
   const createNewGame = () => {
@@ -37,7 +40,15 @@ export const JeopardyMaker = () => {
 
   const playGame = (game: JeopardyGame) => {
     setCurrentGame(game);
-    setGameState({ currentScore: 0, answeredQuestions: [] });
+    setShowTeamSetup(true);
+  };
+
+  const startGameWithTeams = (teams: Team[]) => {
+    setGameState({ 
+      currentScore: 0, 
+      answeredQuestions: [], 
+      teams: teams
+    });
     setCurrentView('play');
   };
 
@@ -61,11 +72,22 @@ export const JeopardyMaker = () => {
     setCurrentView('home');
   };
 
-  const handleQuestionAnswered = () => {
+  const handleQuestionAnswered = (teamId?: string) => {
     if (selectedQuestion && currentGame) {
+      let updatedTeams = [...gameState.teams];
+      
+      if (teamId && updatedTeams.length > 0) {
+        updatedTeams = updatedTeams.map(team => 
+          team.id === teamId 
+            ? { ...team, score: team.score + selectedQuestion.value }
+            : team
+        );
+      }
+      
       setGameState({
-        currentScore: gameState.currentScore + selectedQuestion.value,
-        answeredQuestions: [...gameState.answeredQuestions, selectedQuestion.id]
+        currentScore: gameState.teams.length > 0 ? gameState.currentScore : gameState.currentScore + selectedQuestion.value,
+        answeredQuestions: [...gameState.answeredQuestions, selectedQuestion.id],
+        teams: updatedTeams
       });
     }
     setSelectedQuestion(null);
@@ -98,12 +120,28 @@ export const JeopardyMaker = () => {
               <h1 className="text-3xl font-bold text-primary-foreground">
                 {currentGame.title}
               </h1>
-              <div className="flex items-center gap-2 mt-2 justify-center">
-                <Trophy className="h-5 w-5 text-secondary" />
-                <span className="text-xl font-semibold text-secondary">
-                  {t('play.score')}: ${gameState.currentScore}
-                </span>
-              </div>
+              {gameState.teams.length > 0 ? (
+                <div className="flex items-center gap-4 mt-2 justify-center flex-wrap">
+                  {gameState.teams.map((team) => (
+                    <div key={team.id} className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded-full border border-white/30"
+                        style={{ backgroundColor: team.color }}
+                      />
+                      <span className="text-lg font-semibold text-secondary">
+                        {team.name}: ${team.score}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mt-2 justify-center">
+                  <Trophy className="h-5 w-5 text-secondary" />
+                  <span className="text-xl font-semibold text-secondary">
+                    {t('play.score')}: ${gameState.currentScore}
+                  </span>
+                </div>
+              )}
             </div>
             <LanguageToggle />
           </div>
@@ -122,6 +160,7 @@ export const JeopardyMaker = () => {
           isOpen={!!selectedQuestion}
           onClose={() => setSelectedQuestion(null)}
           onAnswered={handleQuestionAnswered}
+          teams={gameState.teams}
         />
       </div>
     );
@@ -235,6 +274,13 @@ export const JeopardyMaker = () => {
         <MathTutorial
           isOpen={showMathTutorial}
           onClose={() => setShowMathTutorial(false)}
+        />
+        
+        {/* Team Setup Modal */}
+        <TeamSetup
+          isOpen={showTeamSetup}
+          onClose={() => setShowTeamSetup(false)}
+          onStart={startGameWithTeams}
         />
       </div>
     );

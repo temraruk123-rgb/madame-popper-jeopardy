@@ -1,18 +1,20 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { JeopardyQuestion } from '@/types/jeopardy';
+import { JeopardyQuestion, Team } from '@/types/jeopardy';
 import { useState, useEffect } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import confetti from 'canvas-confetti';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { TeamSelector } from './TeamSelector';
 
 interface QuestionModalProps {
   question: JeopardyQuestion | null;
   isOpen: boolean;
   onClose: () => void;
-  onAnswered: () => void;
+  onAnswered: (teamId?: string) => void;
+  teams?: Team[];
 }
 
 const preprocessMath = (text: string): string => {
@@ -73,24 +75,23 @@ const renderMathContent = (text: string) => {
   }
 };
 
-export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: QuestionModalProps) => {
+export const QuestionModal = ({ question, isOpen, onClose, onAnswered, teams = [] }: QuestionModalProps) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const [showTeamSelector, setShowTeamSelector] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
   const getEncouragingMessage = () => {
     const messages = [
-      'celebration.fantastic',
-      'celebration.brilliant', 
-      'celebration.amazing',
-      'celebration.excellent',
-      'celebration.superb',
-      'celebration.outstanding',
-      'celebration.spectacular',
-      'celebration.perfect',
-      'celebration.wonderful',
-      'celebration.marvelous'
+      'celebration.congrats',
+      'celebration.youDidIt', 
+      'celebration.woohoo',
+      'celebration.awesome',
+      'celebration.nice',
+      'celebration.great',
+      'celebration.sweet',
+      'celebration.boom'
     ];
     return messages[Math.floor(Math.random() * messages.length)];
   };
@@ -131,7 +132,6 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
     const randomMessage = getEncouragingMessage();
     toast({
       title: t(randomMessage),
-      description: t('celebration.keepItUp'),
       duration: 3000,
     });
 
@@ -145,12 +145,26 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
   };
 
   const handleAnswered = () => {
+    if (teams.length > 0) {
+      setShowTeamSelector(true);
+    } else {
+      triggerCelebration();
+      setTimeout(() => {
+        onAnswered();
+        setShowAnswer(false);
+        onClose();
+      }, 1500);
+    }
+  };
+
+  const handleTeamSelected = (teamId: string) => {
+    setShowTeamSelector(false);
     triggerCelebration();
     setTimeout(() => {
-      onAnswered();
+      onAnswered(teamId);
       setShowAnswer(false);
       onClose();
-    }, 1500); // Delay closing to enjoy the celebration
+    }, 1500);
   };
 
   const handleShowAnswer = () => {
@@ -219,7 +233,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
             <div className="text-center animate-bounce">
               <div className="text-6xl mb-2">🎉</div>
               <div className="text-2xl font-bold text-primary animate-pulse">
-                {t('celebration.fantastic').replace('🎉 ', '')}
+                {t('celebration.woohoo')}
               </div>
             </div>
           )}
@@ -258,6 +272,15 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered }: Questio
           </div>
         </div>
       </DialogContent>
+      
+      {/* Team Selector Modal */}
+      <TeamSelector
+        isOpen={showTeamSelector}
+        onClose={() => setShowTeamSelector(false)}
+        onSelectTeam={handleTeamSelected}
+        teams={teams}
+        points={question?.value || 0}
+      />
     </Dialog>
   );
 };

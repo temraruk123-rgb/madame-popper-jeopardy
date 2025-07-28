@@ -31,6 +31,7 @@ const translations = {
     'button.cancel': 'Cancel',
     'button.addCategory': 'Add Category',
     'button.addQuestion': 'Add Question',
+    'button.next': 'Next',
     
     // Game Management
     'games.title': 'Your Games',
@@ -104,19 +105,30 @@ const translations = {
     'tutorial.advanced': 'Advanced',
     'tutorial.copySymbol': 'Click to copy',
     'tutorial.copied': 'Copied to clipboard!',
+    'tutorial.clickToCopy': 'Click any symbol card to copy its LaTeX code to your clipboard',
+    'tutorial.pasteCode': 'Paste the code into your question or answer text',
+    'tutorial.useDollar': 'Use $ symbols around math expressions: $\\frac{1}{2}$ for inline math',
+    'tutorial.useDoubleDollar': 'Use $$ symbols for block math: $$\\int_0^1 x^2 dx$$',
+    'tutorial.replacePlaceholders': 'Replace {} placeholders with your own values',
     
     // Celebration Messages
-    'celebration.fantastic': '🎉 Fantastic! You\'re a Jeopardy champion!',
-    'celebration.brilliant': '🌟 Brilliant work! Keep it up!',
-    'celebration.amazing': '🎊 Amazing! You\'re on fire!',
-    'celebration.excellent': '✨ Excellent! Your brain is working overtime!',
-    'celebration.superb': '🚀 Superb! You\'re reaching for the stars!',
-    'celebration.outstanding': '🏆 Outstanding! Victory is yours!',
-    'celebration.spectacular': '💫 Spectacular! You\'re absolutely crushing it!',
-    'celebration.perfect': '🎯 Perfect! Right on target!',
-    'celebration.wonderful': '⭐ Wonderful! You\'re a star student!',
-    'celebration.marvelous': '🎈 Marvelous! Learning is so much fun!',
-    'celebration.keepItUp': 'Keep up the great work! 🎓',
+    'celebration.congrats': 'Congrats!',
+    'celebration.youDidIt': 'You did it!',
+    'celebration.woohoo': 'Woohoo!',
+    'celebration.awesome': 'Awesome!',
+    'celebration.nice': 'Nice!',
+    'celebration.great': 'Great!',
+    'celebration.sweet': 'Sweet!',
+    'celebration.boom': 'Boom!',
+    
+    // Teams
+    'teams.selectTeams': 'Select Number of Teams',
+    'teams.customizeTeams': 'Customize Teams',
+    'teams.teamName': 'Team Name',
+    'teams.teamColor': 'Team Color',
+    'teams.startGame': 'Start Game',
+    'teams.whoGetsPoints': 'Who gets the points?',
+    'teams.teamScore': 'Team Score',
   },
   fr: {
     // Header
@@ -137,6 +149,7 @@ const translations = {
     'button.cancel': 'Annuler',
     'button.addCategory': 'Ajouter une catégorie',
     'button.addQuestion': 'Ajouter une question',
+    'button.next': 'Suivant',
     
     // Game Management
     'games.title': 'Vos jeux',
@@ -210,19 +223,30 @@ const translations = {
     'tutorial.advanced': 'Avancé',
     'tutorial.copySymbol': 'Cliquez pour copier',
     'tutorial.copied': 'Copié dans le presse-papiers !',
+    'tutorial.clickToCopy': 'Cliquez sur n\'importe quelle carte de symbole pour copier son code LaTeX',
+    'tutorial.pasteCode': 'Collez le code dans votre question ou réponse',
+    'tutorial.useDollar': 'Utilisez $ autour des expressions math: $\\frac{1}{2}$ pour les math inline',
+    'tutorial.useDoubleDollar': 'Utilisez $$ pour les math en bloc: $$\\int_0^1 x^2 dx$$',
+    'tutorial.replacePlaceholders': 'Remplacez les {} par vos propres valeurs',
     
     // Celebration Messages
-    'celebration.fantastic': '🎉 Fantastique ! Vous êtes un champion de Jeopardy !',
-    'celebration.brilliant': '🌟 Brillant travail ! Continuez comme ça !',
-    'celebration.amazing': '🎊 Incroyable ! Vous êtes en feu !',
-    'celebration.excellent': '✨ Excellent ! Votre cerveau travaille à plein régime !',
-    'celebration.superb': '🚀 Superbe ! Vous visez les étoiles !',
-    'celebration.outstanding': '🏆 Exceptionnel ! La victoire est vôtre !',
-    'celebration.spectacular': '💫 Spectaculaire ! Vous écrasez tout !',
-    'celebration.perfect': '🎯 Parfait ! En plein dans le mille !',
-    'celebration.wonderful': '⭐ Merveilleux ! Vous êtes un étudiant étoile !',
-    'celebration.marvelous': '🎈 Merveilleux ! Apprendre, c\'est si amusant !',
-    'celebration.keepItUp': 'Continuez ce bon travail ! 🎓',
+    'celebration.congrats': 'Félicitations !',
+    'celebration.youDidIt': 'Vous l\'avez fait !',
+    'celebration.woohoo': 'Youhou !',
+    'celebration.awesome': 'Génial !',
+    'celebration.nice': 'Super !',
+    'celebration.great': 'Excellent !',
+    'celebration.sweet': 'Parfait !',
+    'celebration.boom': 'Boum !',
+    
+    // Teams
+    'teams.selectTeams': 'Sélectionner le nombre d\'équipes',
+    'teams.customizeTeams': 'Personnaliser les équipes',
+    'teams.teamName': 'Nom de l\'équipe',
+    'teams.teamColor': 'Couleur de l\'équipe',
+    'teams.startGame': 'Commencer le jeu',
+    'teams.whoGetsPoints': 'Qui obtient les points ?',
+    'teams.teamScore': 'Score de l\'équipe',
   }
 };
 
