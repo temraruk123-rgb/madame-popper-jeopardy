@@ -127,8 +127,10 @@ const translations = {
     'teams.teamName': 'Team Name',
     'teams.teamColor': 'Team Color',
     'teams.startGame': 'Start Game',
-    'teams.whoGetsPoints': 'Who gets the points?',
+    'teams.whoGetsPoints': 'Which teams answered correctly?',
     'teams.teamScore': 'Team Score',
+    'teams.selectMultiple': 'Select all teams that answered correctly',
+    'teams.awardPoints': 'Award Points',
   },
   fr: {
     // Header
@@ -245,8 +247,10 @@ const translations = {
     'teams.teamName': 'Nom de l\'équipe',
     'teams.teamColor': 'Couleur de l\'équipe',
     'teams.startGame': 'Commencer le jeu',
-    'teams.whoGetsPoints': 'Qui obtient les points ?',
+    'teams.whoGetsPoints': 'Quelles équipes ont répondu correctement ?',
     'teams.teamScore': 'Score de l\'équipe',
+    'teams.selectMultiple': 'Sélectionnez toutes les équipes qui ont répondu correctement',
+    'teams.awardPoints': 'Attribuer les points',
   }
 };
 

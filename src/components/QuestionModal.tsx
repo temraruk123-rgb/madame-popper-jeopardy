@@ -13,7 +13,7 @@ interface QuestionModalProps {
   question: JeopardyQuestion | null;
   isOpen: boolean;
   onClose: () => void;
-  onAnswered: (teamId?: string) => void;
+  onAnswered: (teamIds?: string | string[]) => void;
   teams?: Team[];
 }
 
@@ -157,11 +157,11 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered, teams = [
     }
   };
 
-  const handleTeamSelected = (teamId: string) => {
+  const handleTeamsSelected = (teamIds: string[]) => {
     setShowTeamSelector(false);
     triggerCelebration();
     setTimeout(() => {
-      onAnswered(teamId);
+      onAnswered(teamIds);
       setShowAnswer(false);
       onClose();
     }, 1500);
@@ -277,7 +277,7 @@ export const QuestionModal = ({ question, isOpen, onClose, onAnswered, teams = [
       <TeamSelector
         isOpen={showTeamSelector}
         onClose={() => setShowTeamSelector(false)}
-        onSelectTeam={handleTeamSelected}
+        onSelectTeams={handleTeamsSelected}
         teams={teams}
         points={question?.value || 0}
       />

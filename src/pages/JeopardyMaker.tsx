@@ -72,13 +72,14 @@ export const JeopardyMaker = () => {
     setCurrentView('home');
   };
 
-  const handleQuestionAnswered = (teamId?: string) => {
+  const handleQuestionAnswered = (teamIds?: string | string[]) => {
     if (selectedQuestion && currentGame) {
       let updatedTeams = [...gameState.teams];
       
-      if (teamId && updatedTeams.length > 0) {
+      if (teamIds && updatedTeams.length > 0) {
+        const idsArray = Array.isArray(teamIds) ? teamIds : [teamIds];
         updatedTeams = updatedTeams.map(team => 
-          team.id === teamId 
+          idsArray.includes(team.id)
             ? { ...team, score: team.score + selectedQuestion.value }
             : team
         );
